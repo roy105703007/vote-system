@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>C1&C2</h1>
+
+        <h2 id="info"></h2>
+
+        <h1>Create candidate</h1>
+
+        <label for="name" class="col-lg-2 control-label">Add key</label>
+        <input id="addKey" type="text">
+        <button id="buttonAdd">Add</button>
+
+        <label for="name" class="col-lg-2 control-label">Add candidate</label>
+        <input id="addCan" type="text">
+        <button id="buttonAdd2">Add</button>
+        <ul id="parentUl">
+            <li>候選人名單</li>
+        </ul>
+
+        <h1>Vote</h1>
+
+        <label for="name" class="col-lg-2 control-label">key</label>
+        <input id="key" type="text">
+
+        <label for="name" class="col-lg-2 control-label">c1</label>
+        <input id="c1" type="text">
+
+        <label for="name" class="col-lg-2 control-label">c2</label>
+        <input id="c2" type="text">
+
+        <button id="button">Vote</button>
+
+        <h1>Decrypt</h1>
+
+        <label for="name" class="col-lg-2 control-label">p</label>
+        <input id="p" type="text">
+
+        <label for="name" class="col-lg-2 control-label">x</label>
+        <input id="x" type="text">
+
+        <button id="decrypt">Decrypt</button>
+        <h2 id="result"></h2>
+        <button id="refresh">refresh</button>
+
+        <h1></h1>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+        function addElementLi(obj) {　　　　
+            var ul = document.getElementById(obj);　　　　 //新增 li
+            　　　　
+            var li = document.createElement("li");　　　　 //設定 li 屬性，如 id
+            　　　　
+            li.setAttribute("id", "newli");　　　　
+            li.innerHTML = $("#addCan").val();　　　　
+            ul.appendChild(li);　　
+        }
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+        }
+
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+        var infoContract = web3.eth.contract([{
+            "constant": false,
+            "inputs": [{
+                "name": "id",
+                "type": "uint256"
+            }],
+            "name": "vote",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [{
+                "name": "s",
+                "type": "string"
+            }, {
+                "name": "c1",
+                "type": "uint256"
+            }, {
+                "name": "c2",
+                "type": "uint256"
+            }],
+            "name": "keyAndVote",
+            "outputs": [{
+                "name": "",
+                "type": "string"
+            }],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [{
+                "name": "a",
+                "type": "uint256"
+            }, {
+                "name": "b",
+                "type": "uint256"
+            }],
+            "name": "ext_euclid",
+            "outputs": [{
+                "name": "",
+                "type": "uint256"
+            }, {
+                "name": "",
+                "type": "uint256"
+            }, {
+                "name": "",
+                "type": "uint256"
+            }],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [],
+            "name": "openBallot",
+            "outputs": [{
+                "name": "",
+                "type": "string"
+            }],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [{
+                "name": "name",
+                "type": "string"
+            }],
+            "name": "createCandidate",
+            "outputs": [{
+                "name": "",
+                "type": "uint256"
+            }],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "constant": true,
+            "inputs": [],
+            "name": "getC1C2",
+            "outputs": [{
+                "name": "",
+                "type": "uint256"
+            }, {
+                "name": "",
+                "type": "uint256"
+            }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }, {
+            "constant": true,
+            "inputs": [{
+                "name": "p",
+                "type": "uint256"
+            }, {
+                "name": "x",
+                "type": "uint256"
+            }],
+            "name": "decode",
+            "outputs": [{
+                "name": "",
+                "type": "uint256"
+            }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [{
+                "name": "k",
+                "type": "uint256"
+            }],
+            "name": "AddKeys",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [],
+            "name": "refresh",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }]);
+
+        var info = infoContract.at('0xF8B79d507afC9aA048B05F5732E0696cCEf50150');
+        /*
+        var instructorEvent = info.Instructor();
+        instructorEvent.watch(function(error, result) {
+            if (!error) {
+                //$("#loader").hide();
+                $("#info").html(result.args.name + ' (' + result.args.age + ' years old)');
+            } else {
+                //$("#loader").hide();
+                $("#info").html("roy" + ' (' + "21" + ' years old)');
+                console.log(error);
+            }
+        });*/
+        info.getC1C2(function(error, result) {
+            if (!error) {
+                $("#info").html('C1=' + result[0] + ',C2=' + result[1]);
+                console.log(result);
+            } else
+                console.error(error);
+        });
+        $("#buttonAdd").click(function() {
+            info.AddKeys($("#addKey").val());
+        });
+        $("#buttonAdd2").click(function() {
+            addElementLi("parentUl");
+            info.createCandidate($("#addCan").val())
+        });
+        $("#button").click(function() {
+            info.keyAndVote($("#key").val(), $("#c1").val(), $("#c2").val());
+            info.getC1C2(function(error, result) {
+                if (!error) {
+                    $("#info").html('C1=' + result[0] + ',C2=' + result[1]);
+                    console.log(result);
+                } else
+                    console.error(error);
+            });
+            //$("#loader").show();
+            //$("#info").html("roy" + ' (' + "21" + ' years old)');
+            //info.setInfo($("#name").val(), $("#age").val());
+            /*
+            info.getInfo(function(error, result) {
+                if (!error) {
+                    $("#info").html(result[0] + ' (' + result[1] + ' years old)');
+                    console.log(result);
+                } else
+                    console.error(error);
+            });*/
+        });
+        $("#decrypt").click(function() {
+            // info.decode();
+            info.decode($("#p").val(), $("#x").val(), function(error, result) {
+                if (!error) {
+                    $("#result").html('result=' + result.c[0]);
+                    console.log(result);
+                } else
+                    console.error(error);
+            });
+        });
+        $("#refresh").click(function() {
+            info.refresh();
+        });
+    </script>
+
+</body>
+
+</html>
