@@ -38,12 +38,16 @@
         <label for="name" class="col-lg-2 control-label">key</label>
         <input id="key" type="text">
 
+        <label for="name" class="col-lg-2 control-label">ID</label>
+        <input id="canId" type="text">
+
         <label for="name" class="col-lg-2 control-label">c1</label>
         <input id="c1" type="text">
 
         <label for="name" class="col-lg-2 control-label">c2</label>
         <input id="c2" type="text">
 
+        <button id="buttonvote">VoteById</button>
         <button id="button">Vote</button>
 
         <h1>Decrypt</h1>
@@ -241,6 +245,32 @@
         $("#buttonAdd2").click(function() {
             addElementLi("parentUl");
             info.createCandidate($("#addCan").val())
+        });
+        $("#buttonvote").click(function() {
+            var c1, c2;
+            var p, g, x, y, k, n, m;
+            k = 52, p = 3571, g = 3, x = 12;
+            y = 2933;
+            K = 534;
+            c1 = 2524;
+            n = parseInt($("#canId").val());
+            c2 = (n * K) % p;
+            //c2 = (3 * K) % p;
+            console.log(y);
+            console.log(K);
+            console.log(g);
+            console.log(p);
+            console.log(c1);
+            console.log(c2);
+            //c1 = 2524, c2 = 2670;
+            info.keyAndVote($("#key").val(), c1, c2);
+            info.getC1C2(function(error, result) {
+                if (!error) {
+                    $("#info").html('C1=' + result[0] + ',C2=' + result[1]);
+                    console.log(result);
+                } else
+                    console.error(error);
+            });
         });
         $("#button").click(function() {
             info.keyAndVote($("#key").val(), $("#c1").val(), $("#c2").val());
